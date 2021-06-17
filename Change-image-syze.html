@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="view-port" content="width=device-with, initial-scale=1">
+    <title>change image</title>
+    <style>
+    body{
+      min-height: 100vh;
+      background: linear-gradient(to bottom, #ff33cc, #9900ff);
+      background-repeat:no-repeat ;
+    }
+    .container{
+      position: relative;
+      width: 90%;
+      margin: auto;
+    }
+    h1,span{
+      color:white;
+      text-align: center;
+    }
+     input[type="file"]{
+       height: 0;
+       width: 0;
+     }
+     label{
+        height: 20px;
+        width: 120px;
+        text-align: center;
+        padding: 4px;
+        border: 1px solid gray;
+        border-radius: 4px;
+        display: block;
+        position: relative;
+        margin: auto;
+        color: #e63;
+        background-color: #dd3;
+     }
+     #img{
+        height: 140px;
+        width: auto;
+        position: relative;
+        display: block;
+        margin: auto;
+      }
+      
+      #download{
+        height: 20px;
+        width: 100px;
+        padding: 4px;
+        border: 1px solid gray;
+        border-radius: 4px;
+        text-decoration: none;
+        text-align: center;
+        display: block;
+        position: relative;
+        margin: auto;
+        font-weight: 400;
+        background-color: #33ff33;
+        display: none;
+        
+      }
+      #width, #height{
+        position: relative;
+        width:80px;
+        border: 1px solid grey;
+        border-radius: 2px;
+        margin: 4px 4px 1px;
+        padding: 2px;
+      }
+      .size, #download{
+        display: none;
+      }
+      #output{
+        position: relative;
+        display: block;
+        padding: 5px;
+        margin: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Resize Your Image</h1>
+    <div class="container">
+        <img src="img-default.png" alt="default-image" id="img"/><br>
+        <label for="file">Upload Image</label>
+        <input type="file" accept="image/*" id="file" onchange="loadImage(event)"/>
+        <div class="size">
+           <span>Width:</span>  <input type="number" id="width" placeholder="px" required="Width is required"/><br>
+           <span>Height:</span><input type="number" id="height" placeholder="px"/>
+        <button type="submit">Resize</button>
+        </div><br>
+        <div>
+          <canvas id="result" style="display:none">
+          </canvas>
+        </div>
+        <div>
+        <img src="" id="output">
+        <a id="download">download</a>
+        </div>
+    </div>
+    <script type="text/javascript" charset="utf-8">
+      const canvas = document.querySelector("#result");
+      const downloadImg = document.querySelector("#download");
+     const ctx = canvas.getContext("2d");
+     const image = document.querySelector("#img");
+     const size = document.querySelector(".size");
+     const time = new Date().getTime();
+     //image.src="img-default.png";    
+      function loadImage(event){
+          image.src = URL.createObjectURL(event.target.files[0]);
+          size.style.display="block";
+     }
+        
+        const previewButton = document.querySelector("button");
+        previewButton.addEventListener("click", preview);
+        
+        function preview(){
+          
+          const width = document.querySelector("#width").value;
+          const height = document.querySelector("#height").value;
+          
+          if(width && height){
+          canvas.height = height;
+          canvas.width = width;
+          ctx.drawImage(image, 0, 0, width, height);
+           let dataurl = canvas.toDataURL("image/*");
+           let output = document.getElementById('output');
+            output.src = dataurl;
+         
+            downloadImg.setAttribute("href", dataurl);
+            downloadImg.setAttribute("download", time);
+            downloadImg.style.display="block";
+        
+          }else{
+            alert( "Please set Width and height!");
+          }
+          
+        }
+        
+    </script>
+  </body>
+</html>
